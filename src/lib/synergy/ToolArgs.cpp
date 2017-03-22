@@ -23,7 +23,6 @@ ToolArgs::ToolArgs() :
 	m_getInstalledDir(false),
 	m_getProfileDir(false),
 	m_getArch(false),
-	m_notifyActivation(false),
 	m_notifyUpdate(false)
 {
 }

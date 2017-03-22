@@ -29,7 +29,6 @@ public:
 
 private:
 	void				loginAuth();
-	void				notifyActivation();
 	void                notifyUpdate();
 
 private:

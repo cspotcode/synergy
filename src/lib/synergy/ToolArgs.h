@@ -29,6 +29,5 @@ public:
 	bool				m_getInstalledDir;
 	bool				m_getProfileDir;
 	bool				m_getArch;
-	bool				m_notifyActivation;
 	bool                m_notifyUpdate;
 };

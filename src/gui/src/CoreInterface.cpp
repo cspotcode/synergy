@@ -28,12 +28,6 @@
 
 static const char kCoreBinary[] = "syntool";
 
-#ifdef Q_WS_WIN
-static const char kSerialKeyFilename[] = "Synergy.subkey";
-#else
-static const char kSerialKeyFilename[] = ".synergy.subkey";
-#endif
-
 CoreInterface::CoreInterface()
 {
 }
@@ -56,31 +50,11 @@ QString CoreInterface::getArch()
 	return run(args);
 }
 
-QString CoreInterface::getSerialKeyFilePath()
-{
-	QString filename = getProfileDir() + QDir::separator() + kSerialKeyFilename;
-	return filename;
-}
-
 QString CoreInterface::notifyUpdate (QString const& fromVersion,
 									  QString const& toVersion) {
 	QStringList args("--notify-update");
 	QString input(fromVersion + ":" + toVersion);
 	input.append("\n");
-	return run(args, input);
-}
-
-QString CoreInterface::notifyActivation(const QString& identity)
-{
-	QStringList args("--notify-activation");
-
-	QString input(identity + ":" + hash(getFirstMacAddress()));
-	QString os= getOSInformation();
-	if (!os.isEmpty()) {
-		input.append(":").append(os);
-	}
-	input.append("\n");
-
 	return run(args, input);
 }
 

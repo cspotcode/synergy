@@ -83,9 +83,6 @@ ToolApp::run(int argc, char** argv)
 		else if (m_args.m_notifyUpdate) {
 			notifyUpdate();
 		}
-		else if (m_args.m_notifyActivation) {
-			notifyActivation();
-		}
 		else {
 			throw XSynergy("Nothing to do");
 		}
@@ -157,50 +154,5 @@ ToolApp::notifyUpdate()
 	}
 	else {
 		throw XSynergy("Invalid update data.");
-	}
-}
-
-void
-ToolApp::notifyActivation()
-{
-	String info;
-	std::cin >> info;
-
-	std::vector<String> parts = synergy::string::splitString(info, ':');
-	size_t count = parts.size();
-
-	if (count == 3 || count == 4) {
-		String action = parts[0];
-		String identity = parts[1];
-		String macHash = parts[2];
-		String os;
-
-		if (count == 4) {
-			os = parts[3];
-		}
-		else {
-			os = ARCH->getOSName();
-		}
-
-		std::stringstream ss;
-		ss <<  JSON_URL << "notify/";
-		ss << "?action=" << action;
-		ss << "&identity=" << ARCH->internet().urlEncode(identity);
-		ss << "&mac=" << ARCH->internet().urlEncode(macHash);
-		ss << "&os=" << ARCH->internet().urlEncode(ARCH->getOSName());
-		ss << "&arch=" << ARCH->internet().urlEncode(ARCH->getPlatformName());
-
-		try {
-			std::cout << ARCH->internet().get(ss.str()) << std::endl;
-		}
-		catch (std::exception& e) {
-			LOG((CLOG_NOTE "An error occurred during notification: %s\n", e.what()));
-		}
-		catch (...) {
-			LOG((CLOG_NOTE "An unknown error occurred during notification.\n"));
-		}
-	}
-	else {
-		LOG((CLOG_NOTE "notification failed"));
 	}
 }
