@@ -1,0 +1,92 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "0.1.0",
+    "isShellCommand": true,
+    "showOutput": "always",
+    "command": "./hm.sh",
+    "suppressTaskName": true,
+    "options": {
+        "env": {
+            "PATH": "${env.HOME}/Qt/5.8/clang_64/bin:${env.PATH}"
+        }
+    },
+    "tasks": [
+        {
+            "taskName": "Configure (debug)",
+            "args": [
+                 "conf",
+                 "-g1",
+                 "-d",
+                 "--mac-sdk",
+                 "10.12",
+                 "--mac-identity",
+                 "Sierra"
+            ]
+        },
+        {
+            "taskName": "Build (debug)",
+            "args": [
+                "build",
+                "-d"
+            ],
+            "problemMatcher": {
+                "applyTo": "allDocuments",
+                "fileLocation": ["relative", "${workspaceRoot}/src/gui"],
+                "pattern": {
+                    "regexp": "^(.*?):(\\d+):(\\d+): (.*?): (.*)$",
+                    "file": 1,
+                    "line": 2,
+                    "column": 3,
+                    "severity": 4,
+                    "message": 5
+                }
+            }
+        },
+        {
+            "taskName": "Clean (debug)",
+            "args": [
+                "clean",
+                "-d"
+            ]
+        }
+        {
+            "taskName": "Configure",
+            "args": [
+                 "conf",
+                 "-g1",
+                 "--mac-sdk",
+                 "10.12",
+                 "--mac-identity",
+                 "Sierra"
+            ]
+        },
+        {
+            "taskName": "Build",
+            "args": [
+                "build"
+            ],
+            "isBuildCommand": true,
+            // Commented out because it doesn't work
+            // "problemMatcher": {
+            //     "applyTo": "allDocuments",
+            //     "fileLocation": ["relative", "${workspaceRoot}/src/gui"],
+            //     "pattern": {
+            //         "regexp": "^(.*?):(\\d+):(\\d+): (.*?): (.*)$",
+            //         "file": 1,
+            //         "line": 2,
+            //         "column": 3,
+            //         "severity": 4,
+            //         "message": 5
+            //     }
+            // }
+        },
+        {
+            "taskName": "Build installers",
+            "args": [
+                "package",
+                "mac"
+            ]
+        }
+    ]
+}
