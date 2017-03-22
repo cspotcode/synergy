@@ -78,10 +78,7 @@ class AppConfig: public QObject
 		void setAutoConfig(bool autoConfig);
 		bool autoConfigPrompted();
 		void setAutoConfigPrompted(bool prompted);
-		void setEdition(Edition);
 		Edition edition() const;
-		int lastExpiringWarningTime() const;
-		void setLastExpiringWarningTime(int t);
 
 		QString synergysName() const;
 		QString synergycName() const;
@@ -135,13 +132,9 @@ protected:
 		bool m_AutoConfig;
 		ElevateMode m_ElevateMode;
 		bool m_AutoConfigPrompted;
-		Edition m_Edition;
-		QString m_ActivateEmail;
 		bool m_CryptoEnabled;
 		bool m_AutoHide;
 		QString m_lastVersion;
-		int m_LastExpiringWarningTime;
-		bool m_ActivationHasRun;
 
 		static const char m_SynergysName[];
 		static const char m_SynergycName[];

@@ -273,8 +273,6 @@ void MainWindow::createMenuBar()
 	m_pMenuFile->addAction(m_pActionStartSynergy);
 	m_pMenuFile->addAction(m_pActionStopSynergy);
 	m_pMenuFile->addSeparator();
-	m_pMenuFile->addAction(m_pActivate);
-	m_pMenuFile->addSeparator();
 	m_pMenuFile->addAction(m_pActionSave);
 	m_pMenuFile->addSeparator();
 	m_pMenuFile->addAction(m_pActionQuit);
