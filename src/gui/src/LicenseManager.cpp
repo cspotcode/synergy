@@ -60,7 +60,6 @@ LicenseManager::setSerialKey(SerialKey serialKey, bool acceptExpired)
 			if (m_serialKey.isExpired(currentTime)) {
 				emit endTrial(true);
 			} else {
-				emit beginTrial(m_serialKey.isExpiring(currentTime));
 			}
 		}
 
@@ -76,21 +75,6 @@ LicenseManager::notifyUpdate(QString fromVersion, QString toVersion) {
 		&& (m_serialKey == SerialKey(kUnregistered))) {
 		return;
 	}
-
-	ActivationNotifier* notifier = new ActivationNotifier();
-	notifier->setUpdateInfo (fromVersion, toVersion,
-							QString::fromStdString(m_serialKey.toString()));
-
-	QThread* thread = new QThread();
-	connect(notifier, SIGNAL(finished()), thread, SLOT(quit()));
-	connect(notifier, SIGNAL(finished()), notifier, SLOT(deleteLater()));
-	connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
-
-	notifier->moveToThread(thread);
-	thread->start();
-
-	QMetaObject::invokeMethod(notifier, "notifyUpdate",
-							  Qt::QueuedConnection);
 }
 
 Edition
@@ -129,7 +113,6 @@ void LicenseManager::refresh()
 
 void LicenseManager::skipActivation()
 {
-	notifyActivation ("skip:unknown");
 }
 
 QString
@@ -150,20 +133,4 @@ LicenseManager::getEditionName(Edition const edition, bool trial)
 		name += " (Trial)";
 	}
 	return QString::fromUtf8 (name.c_str(), name.size());
-}
-
-void LicenseManager::notifyActivation(QString identity)
-{
-	ActivationNotifier* notifier = new ActivationNotifier();
-	notifier->setIdentity(identity);
-
-	QThread* thread = new QThread();
-	connect(notifier, SIGNAL(finished()), thread, SLOT(quit()));
-	connect(notifier, SIGNAL(finished()), notifier, SLOT(deleteLater()));
-	connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
-
-	notifier->moveToThread(thread);
-	thread->start();
-
-	QMetaObject::invokeMethod(notifier, "notify", Qt::QueuedConnection);
 }

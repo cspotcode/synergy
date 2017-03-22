@@ -33,7 +33,6 @@
 #include "VersionChecker.h"
 #include "IpcClient.h"
 #include "Ipc.h"
-#include "ActivationDialog.h"
 
 #include <QMutex>
 
@@ -66,7 +65,6 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 
 	friend class QSynergyApplication;
 	friend class SetupWizard;
-	friend class ActivationDialog;
 	friend class SettingsDialog;
 
 	public:
@@ -120,11 +118,8 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void updateLocalFingerprint();
 		LicenseManager& licenseManager() const;
 
-		int raiseActivationDialog();
-
 public slots:
 		void setEdition(Edition edition);
-		void beginTrial(bool isExpiring);
 		void endTrial(bool isExpired);
 		void appendLogRaw(const QString& text);
 		void appendLogInfo(const QString& text);
@@ -141,7 +136,6 @@ public slots:
 		bool on_m_pActionSave_triggered();
 		void on_m_pActionAbout_triggered();
 		void on_m_pActionSettings_triggered();
-		void on_m_pActivate_triggered();
 		void synergyFinished(int exitCode, QProcess::ExitStatus);
 		void trayActivated(QSystemTrayIcon::ActivationReason reason);
 		void stopSynergy();
@@ -223,7 +217,6 @@ public slots:
 		qRuningState m_ExpectedRunningState;
 		QMutex m_StopDesktopMutex;
 		SslCertificate* m_pSslCertificate;
-		bool m_ActivationDialogRunning;
 		QStringList m_PendingClientNames;
 
 private slots:

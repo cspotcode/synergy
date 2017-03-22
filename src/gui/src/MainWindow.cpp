@@ -26,7 +26,6 @@
 #include "AboutDialog.h"
 #include "ServerConfigDialog.h"
 #include "SettingsDialog.h"
-#include "ActivationDialog.h"
 #include "ZeroconfService.h"
 #include "DataDownloader.h"
 #include "CommandProcess.h"
@@ -101,8 +100,7 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig,
 	m_BonjourInstall(NULL),
 	m_SuppressEmptyServerWarning(false),
 	m_ExpectedRunningState(kStopped),
-	m_pSslCertificate(NULL),
-	m_ActivationDialogRunning(false)
+	m_pSslCertificate(NULL)
 {
 	setupUi(this);
 
@@ -145,9 +143,6 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig,
 
 	connect (m_LicenseManager, SIGNAL(editionChanged(Edition)),
 			 this, SLOT(setEdition(Edition)), Qt::QueuedConnection);
-
-	connect (m_LicenseManager, SIGNAL(beginTrial(bool)),
-			 this, SLOT(beginTrial(bool)), Qt::QueuedConnection);
 
 	connect (m_LicenseManager, SIGNAL(endTrial(bool)),
 			 this, SLOT(endTrial(bool)), Qt::QueuedConnection);
@@ -460,7 +455,6 @@ void MainWindow::checkLicense(const QString &line)
 {
 	if (line.contains("trial has expired")) {
 		licenseManager().refresh();
-		raiseActivationDialog();
 	}
 }
 
@@ -552,14 +546,6 @@ void MainWindow::clearLog()
 
 void MainWindow::startSynergy()
 {
-	SerialKey serialKey = m_LicenseManager->serialKey();
-	time_t currentTime = ::time(0);
-	if (serialKey.isExpired(currentTime)) {
-		if (QDialog::Rejected == raiseActivationDialog()) {
-			return;
-		}
-	}
-
 	bool desktopMode = appConfig().processMode() == Desktop;
 	bool serviceMode = appConfig().processMode() == Service;
 
@@ -1060,32 +1046,6 @@ void MainWindow::setEdition(Edition edition)
 	saveSettings();
 }
 
-void MainWindow::beginTrial(bool isExpiring)
-{
-	//Hack
-	//if (isExpiring) {
-	time_t daysLeft = m_LicenseManager->serialKey().daysLeft(::time(0));
-		QString expiringNotice ("<html><head/><body><p><span style=\""
-					 "font-weight:600;\">%1</span> day%3 of "
-					 "your %2 trial remain%5. <a href="
-					 "\"https://symless.com/synergy/trial/thanks?id=%4\">"
-					 "<span style=\"text-decoration: underline;"
-					 " color:#0000ff;\">Buy now!</span></a>"
-					 "</p></body></html>");
-		expiringNotice = expiringNotice
-			.arg (daysLeft)
-			.arg (LicenseManager::getEditionName
-					(m_LicenseManager->activeEdition()))
-			.arg ((daysLeft == 1) ? "" : "s")
-			.arg (QString::fromStdString
-					(m_LicenseManager->serialKey().toString()))
-			.arg ((daysLeft == 1) ? "s" : "");
-		this->m_trialLabel->setText(expiringNotice);
-		this->m_trialWidget->show();
-	//}
-	setWindowTitle (m_LicenseManager->activeEditionName());
-}
-
 void MainWindow::endTrial(bool isExpired)
 {
 	if (isExpired) {
@@ -1194,14 +1154,6 @@ void MainWindow::on_m_pActionSettings_triggered()
 void MainWindow::autoAddScreen(const QString name)
 {
 	if (!m_ServerConfig.ignoreAutoConfigClient()) {
-		if (m_ActivationDialogRunning) {
-			// TODO: refactor this code
-			// add this screen to the pending list and check this list until
-			// users finish activation dialog
-			m_PendingClientNames.append(name);
-			return;
-		}
-
 		int r = m_ServerConfig.autoAddScreen(name);
 		if (r != kAutoAddScreenOk) {
 			switch (r) {
@@ -1235,11 +1187,6 @@ void MainWindow::showConfigureServer(const QString& message)
 void MainWindow::on_m_pButtonConfigureServer_clicked()
 {
 	showConfigureServer();
-}
-
-void MainWindow::on_m_pActivate_triggered()
-{
-	raiseActivationDialog();
 }
 
 void MainWindow::on_m_pButtonApply_clicked()
@@ -1454,37 +1401,12 @@ void MainWindow::bonjourInstallFinished()
 	m_pCheckBoxAutoConfig->setChecked(true);
 }
 
-int MainWindow::raiseActivationDialog()
-{
-	if (m_ActivationDialogRunning) {
-		return QDialog::Rejected;
-	}
-	ActivationDialog activationDialog (this, appConfig(), licenseManager());
-	m_ActivationDialogRunning = true;
-	connect (&activationDialog, SIGNAL(finished(int)),
-			 this, SLOT(on_activationDialogFinish()), Qt::QueuedConnection);
-	int result = activationDialog.exec();
-	m_ActivationDialogRunning = false;
-	if (!m_PendingClientNames.empty()) {
-		foreach (const QString& name, m_PendingClientNames) {
-			autoAddScreen(name);
-		}
-
-		m_PendingClientNames.clear();
-	}
-	if (result == QDialog::Accepted) {
-		restartSynergy();
-	}
-	return result;
-}
-
 void MainWindow::on_windowShown()
 {
 	time_t currentTime = ::time(0);
 	if (!m_AppConfig->activationHasRun()
 			&& ((m_AppConfig->edition() == kUnregistered) ||
 				(m_LicenseManager->serialKey().isExpired(currentTime)))) {
-		raiseActivationDialog();
 	}
 }
 

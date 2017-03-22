@@ -18,8 +18,6 @@ FORMS += res/MainWindowBase.ui \
     res/SettingsDialogBase.ui \
     res/SetupWizardBase.ui \
     res/AddClientDialogBase.ui \
-    res/ActivationDialog.ui \
-    res/CancelActivationDialog.ui \
     res/FailedLoginDialog.ui
 SOURCES += src/main.cpp \
     src/MainWindow.cpp \
@@ -61,9 +59,6 @@ SOURCES += src/main.cpp \
     src/Fingerprint.cpp \
     src/SslCertificate.cpp \
     src/WebClient.cpp \
-    src/ActivationNotifier.cpp \
-    src/ActivationDialog.cpp \
-    src/CancelActivationDialog.cpp \
     src/FailedLoginDialog.cpp \
     ../lib/shared/SerialKey.cpp \
     src/LicenseManager.cpp
@@ -108,10 +103,7 @@ HEADERS += src/MainWindow.h \
     src/Fingerprint.h \
     src/SslCertificate.h \
     src/WebClient.h \
-    src/ActivationNotifier.h \
     src/ElevateMode.h \
-    src/ActivationDialog.h \
-    src/CancelActivationDialog.h \
     src/FailedLoginDialog.h \
     ../lib/shared/EditionType.h \
     ../lib/shared/SerialKey.h \

@@ -19,7 +19,6 @@
 
 #include <QObject>
 #include <SerialKey.h>
-#include <ActivationNotifier.h>
 #include <utility>
 
 class AppConfig;
@@ -48,6 +47,5 @@ private:
 signals:
 	void serialKeyChanged (SerialKey) const;
 	void editionChanged (Edition) const;
-	void beginTrial (bool expiring) const;
 	void endTrial (bool expired) const;
 };
