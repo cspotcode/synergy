@@ -191,10 +191,6 @@ ArgParser::parseToolArgs(ToolArgs& args, int argc, const char* const* argv)
 			args.m_getArch = true;
 			return true;
 		}
-		else if (isArg(i, argc, argv, NULL, "--notify-activation", 0)) {
-			args.m_notifyActivation = true;
-			return true;
-		}
 		else if (isArg(i, argc, argv, NULL, "--notify-update", 0)) {
 			args.m_notifyUpdate = true;
 			return true;
