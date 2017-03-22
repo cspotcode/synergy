@@ -20,7 +20,6 @@
 #define TRAY_RETRY_WAIT 2000
 
 #include "QSynergyApplication.h"
-#include "LicenseManager.h"
 #include "MainWindow.h"
 #include "AppConfig.h"
 #include "SetupWizard.h"
@@ -85,11 +84,10 @@ int main(int argc, char* argv[])
 	QSettings settings;
 	AppConfig appConfig (&settings);
 	qRegisterMetaType<Edition>("Edition");
-	LicenseManager licenseManager (&appConfig);
 
 	app.switchTranslator(appConfig.language());
 
-	MainWindow mainWindow(settings, appConfig, licenseManager);
+	MainWindow mainWindow(settings, appConfig);
 	SetupWizard setupWizard(mainWindow, true);
 
 	if (appConfig.wizardShouldRun())

@@ -18,7 +18,6 @@
 #include "SetupWizard.h"
 #include "MainWindow.h"
 #include "WebClient.h"
-#include "LicenseManager.h"
 #include "EditionType.h"
 #include "QSynergyApplication.h"
 #include "QUtility.h"

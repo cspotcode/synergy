@@ -57,7 +57,6 @@ class ZeroconfService;
 class DataDownloader;
 class CommandProcess;
 class SslCertificate;
-class LicenseManager;
 
 class MainWindow : public QMainWindow, public Ui::MainWindowBase
 {
@@ -93,8 +92,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		};
 
 	public:
-		MainWindow(QSettings& settings, AppConfig& appConfig,
-				   LicenseManager& licenseManager);
+		MainWindow(QSettings& settings, AppConfig& appConfig);
 		~MainWindow();
 
 	public:
@@ -116,11 +114,9 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void updateZeroconfService();
 		void serverDetected(const QString name);
 		void updateLocalFingerprint();
-		LicenseManager& licenseManager() const;
 
 public slots:
 		void setEdition(Edition edition);
-		void endTrial(bool isExpired);
 		void appendLogRaw(const QString& text);
 		void appendLogInfo(const QString& text);
 		void appendLogDebug(const QString& text);
@@ -179,7 +175,6 @@ public slots:
 		void promptAutoConfig();
 		QString getProfileRootForArg();
 		void checkConnected(const QString& line);
-		void checkLicense(const QString& line);
 		void checkFingerprint(const QString& line);
 		bool autoHide();
 		QString getTimeStamp();
@@ -191,7 +186,6 @@ public slots:
 	private:
 		QSettings& m_Settings;
 		AppConfig* m_AppConfig;
-		LicenseManager* m_LicenseManager;
 		QProcess* m_pSynergy;
 		int m_SynergyState;
 		ServerConfig m_ServerConfig;

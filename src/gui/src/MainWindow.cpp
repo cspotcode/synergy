@@ -29,7 +29,6 @@
 #include "ZeroconfService.h"
 #include "DataDownloader.h"
 #include "CommandProcess.h"
-#include "LicenseManager.h"
 #include "EditionType.h"
 #include "QUtility.h"
 #include "ProcessorArch.h"
@@ -75,11 +74,9 @@ static const char* synergyIconFiles[] =
 	":/res/icons/16x16/synergy-transfering.png"
 };
 
-MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig,
-					   LicenseManager& licenseManager) :
+MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	m_Settings(settings),
 	m_AppConfig(&appConfig),
-	m_LicenseManager(&licenseManager),
 	m_pSynergy(NULL),
 	m_SynergyState(synergyDisconnected),
 	m_ServerConfig(&m_Settings, 5, 3, m_AppConfig->screenName(), this),
@@ -141,24 +138,14 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig,
 	connect (this, SIGNAL(windowShown()),
 			 this, SLOT(on_windowShown()), Qt::QueuedConnection);
 
-	connect (m_LicenseManager, SIGNAL(editionChanged(Edition)),
-			 this, SLOT(setEdition(Edition)), Qt::QueuedConnection);
-
-	connect (m_LicenseManager, SIGNAL(endTrial(bool)),
-			 this, SLOT(endTrial(bool)), Qt::QueuedConnection);
-
 	connect (m_AppConfig, SIGNAL(sslToggled(bool)),
 			 this, SLOT(sslToggled(bool)), Qt::QueuedConnection);
-
-	setWindowTitle (m_LicenseManager->activeEditionName());
-	m_LicenseManager->refresh();
 
 	QString lastVersion = m_AppConfig->lastVersion();
 	QString currentVersion = m_VersionChecker.getVersion();
 	if (lastVersion != currentVersion) {
 		m_AppConfig->setLastVersion (currentVersion);
 		m_AppConfig->saveSettings();
-		m_LicenseManager->notifyUpdate (lastVersion, currentVersion);
 	}
 }
 
@@ -426,7 +413,6 @@ void MainWindow::updateFromLogLine(const QString &line)
 	// TODO: this code makes Andrew cry
 	checkConnected(line);
 	checkFingerprint(line);
-	checkLicense(line);
 }
 
 void MainWindow::checkConnected(const QString& line)
@@ -448,13 +434,6 @@ void MainWindow::checkConnected(const QString& line)
 			appConfig().setStartedBefore(true);
 			appConfig().saveSettings();
 		}
-	}
-}
-
-void MainWindow::checkLicense(const QString &line)
-{
-	if (line.contains("trial has expired")) {
-		licenseManager().refresh();
 	}
 }
 
@@ -1037,38 +1016,12 @@ void MainWindow::serverDetected(const QString name)
 
 void MainWindow::setEdition(Edition edition)
 {
-	setWindowTitle(m_LicenseManager->getEditionName (edition));
 	if (m_AppConfig->getCryptoEnabled()) {
 		m_pSslCertificate = new SslCertificate(this);
 		m_pSslCertificate->generateCertificate();
 	}
 	updateLocalFingerprint();
 	saveSettings();
-}
-
-void MainWindow::endTrial(bool isExpired)
-{
-	if (isExpired) {
-		QString expiredNotice (
-			"<html><head/><body><p>Your %1 trial has expired. <a href="
-			"\"https://symless.com/synergy/trial/thanks?id=%2\">"
-			"<span style=\"text-decoration: underline;color:#0000ff;\">"
-			"Buy now!</span></a></p></body></html>"
-		);
-		expiredNotice = expiredNotice
-			.arg(LicenseManager::getEditionName
-					(m_LicenseManager->activeEdition()))
-			.arg(QString::fromStdString
-					(m_LicenseManager->serialKey().toString()));
-
-		this->m_trialLabel->setText(expiredNotice);
-		this->m_trialWidget->show();
-		stopSynergy();
-		m_AppConfig->activationHasRun(false);
-	} else {
-		this->m_trialWidget->hide();
-	}
-	setWindowTitle (m_LicenseManager->activeEditionName());
 }
 
 void MainWindow::updateLocalFingerprint()
@@ -1082,12 +1035,6 @@ void MainWindow::updateLocalFingerprint()
 		m_pLabelFingerprint->setVisible(false);
 		m_pLabelLocalFingerprint->setVisible(false);
 	}
-}
-
-LicenseManager&
-MainWindow::licenseManager() const
-{
-	return *m_LicenseManager;
 }
 
 void MainWindow::on_m_pGroupClient_toggled(bool on)
@@ -1403,11 +1350,6 @@ void MainWindow::bonjourInstallFinished()
 
 void MainWindow::on_windowShown()
 {
-	time_t currentTime = ::time(0);
-	if (!m_AppConfig->activationHasRun()
-			&& ((m_AppConfig->edition() == kUnregistered) ||
-				(m_LicenseManager->serialKey().isExpired(currentTime)))) {
-	}
 }
 
 QString MainWindow::getProfileRootForArg()

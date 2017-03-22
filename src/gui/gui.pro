@@ -60,8 +60,7 @@ SOURCES += src/main.cpp \
     src/SslCertificate.cpp \
     src/WebClient.cpp \
     src/FailedLoginDialog.cpp \
-    ../lib/shared/SerialKey.cpp \
-    src/LicenseManager.cpp
+    ../lib/shared/SerialKey.cpp
 HEADERS += src/MainWindow.h \
     src/AboutDialog.h \
     src/ServerConfig.h \
@@ -106,8 +105,7 @@ HEADERS += src/MainWindow.h \
     src/ElevateMode.h \
     src/FailedLoginDialog.h \
     ../lib/shared/EditionType.h \
-    ../lib/shared/SerialKey.h \
-    src/LicenseManager.h
+    ../lib/shared/SerialKey.h
 RESOURCES += res/Synergy.qrc
 RC_FILE = res/win/Synergy.rc
 macx { 
