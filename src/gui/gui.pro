@@ -17,8 +17,7 @@ FORMS += res/MainWindowBase.ui \
     res/HotkeyDialogBase.ui \
     res/SettingsDialogBase.ui \
     res/SetupWizardBase.ui \
-    res/AddClientDialogBase.ui \
-    res/FailedLoginDialog.ui
+    res/AddClientDialogBase.ui
 SOURCES += src/main.cpp \
     src/MainWindow.cpp \
     src/AboutDialog.cpp \
@@ -58,9 +57,7 @@ SOURCES += src/main.cpp \
     src/CoreInterface.cpp \
     src/Fingerprint.cpp \
     src/SslCertificate.cpp \
-    src/WebClient.cpp \
-    src/FailedLoginDialog.cpp \
-    ../lib/shared/SerialKey.cpp
+    src/WebClient.cpp
 HEADERS += src/MainWindow.h \
     src/AboutDialog.h \
     src/ServerConfig.h \
@@ -103,9 +100,7 @@ HEADERS += src/MainWindow.h \
     src/SslCertificate.h \
     src/WebClient.h \
     src/ElevateMode.h \
-    src/FailedLoginDialog.h \
-    ../lib/shared/EditionType.h \
-    ../lib/shared/SerialKey.h
+    ../lib/shared/EditionType.h
 RESOURCES += res/Synergy.qrc
 RC_FILE = res/win/Synergy.rc
 macx { 

@@ -769,10 +769,6 @@ bool MainWindow::serverArgs(QStringList& args, QString& app)
 #endif
 	args << "-c" << configFilename << "--address" << address();
 
-	if (!appConfig().serialKey().isEmpty()) {
-		args << "--serial-key" << appConfig().serialKey();
-	}
-
 	return true;
 }
 

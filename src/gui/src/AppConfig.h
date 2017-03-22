@@ -80,9 +80,6 @@ class AppConfig: public QObject
 		void setAutoConfigPrompted(bool prompted);
 		void setEdition(Edition);
 		Edition edition() const;
-		QString setSerialKey(QString serial);
-		void clearSerialKey();
-		QString serialKey();
 		int lastExpiringWarningTime() const;
 		void setLastExpiringWarningTime(int t);
 
@@ -142,7 +139,6 @@ protected:
 		QString m_ActivateEmail;
 		bool m_CryptoEnabled;
 		bool m_AutoHide;
-		QString m_Serialkey;
 		QString m_lastVersion;
 		int m_LastExpiringWarningTime;
 		bool m_ActivationHasRun;

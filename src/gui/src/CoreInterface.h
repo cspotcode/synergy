@@ -30,7 +30,6 @@ public:
 	QString getSerialKeyFilePath();
 	QString notifyActivation(const QString& identity);
 	QString notifyUpdate (QString const& fromVersion,
-						   QString const& toVersion,
-						   QString const& serialKey);
+						   QString const& toVersion);
 	QString run(const QStringList& args, const QString& input = "");
 };

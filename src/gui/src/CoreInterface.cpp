@@ -63,10 +63,9 @@ QString CoreInterface::getSerialKeyFilePath()
 }
 
 QString CoreInterface::notifyUpdate (QString const& fromVersion,
-									  QString const& toVersion,
-									  QString const& serialKey) {
+									  QString const& toVersion) {
 	QStringList args("--notify-update");
-	QString input(fromVersion + ":" + toVersion + ":" + serialKey);
+	QString input(fromVersion + ":" + toVersion);
 	input.append("\n");
 	return run(args, input);
 }

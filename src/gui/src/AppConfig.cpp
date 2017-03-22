@@ -161,7 +161,6 @@ void AppConfig::loadSettings()
 	m_ActivateEmail = settings().value("activateEmail", "").toString();
 	m_CryptoEnabled = settings().value("cryptoEnabled", true).toBool();
 	m_AutoHide = settings().value("autoHide", false).toBool();
-	m_Serialkey = settings().value("serialKey", "").toString().trimmed();
 	m_lastVersion = settings().value("lastVersion", "Unknown").toString();
 	m_LastExpiringWarningTime = settings().value("lastExpiringWarningTime", 0).toInt();
 	m_ActivationHasRun = settings().value("activationHasRun", false).toBool();
@@ -187,7 +186,6 @@ void AppConfig::saveSettings()
 	settings().setValue("edition", m_Edition);
 	settings().setValue("cryptoEnabled", m_CryptoEnabled);
 	settings().setValue("autoHide", m_AutoHide);
-	settings().setValue("serialKey", m_Serialkey);
 	settings().setValue("lastVersion", m_lastVersion);
 	settings().setValue("lastExpiringWarningTime", m_LastExpiringWarningTime);
 	settings().setValue("activationHasRun", m_ActivationHasRun);
@@ -253,19 +251,6 @@ void AppConfig::setEdition(Edition e) {
 }
 
 Edition AppConfig::edition() const { return m_Edition; }
-
-QString AppConfig::setSerialKey(QString serial) {
-	using std::swap;
-	swap (serial, m_Serialkey);
-	return serial;
-}
-
-void AppConfig::clearSerialKey()
-{
-	m_Serialkey.clear();
-}
-
-QString AppConfig::serialKey() { return m_Serialkey; }
 
 int AppConfig::lastExpiringWarningTime() const { return m_LastExpiringWarningTime; }
 
