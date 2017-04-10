@@ -1,1 +1,48 @@
 Compiling: https://github.com/symless/synergy/wiki/Compiling
+
+# On Windows:
+
+Using Chocolatey, install python2, wixtoolset, cmake, and git
+
+Manually install Qt SDK by downloading from Qt's website.
+- when picking components to install, choose default mingw option, not msvc stuff.  You can deselect everything else.  I did version 5.8.
+
+Install the latest Visual Studio Community (I used 2017)
+
+Install [Bonjour SDK for Windows](https://developer.apple.com/download/more/?q=Bonjour%20SDK%20for%20Windows).  You'll need to login with an Apple ID to download it, which is annoying.
+
+Add cmake and qt to path.
+
+```powershell
+$Env:Path += ';C:\Program Files\Cmake\bin'
+# Assuming Qt was installed to the default location:
+$env:path += ';C:\Qt\5.8\mingw53_32\bin'
+$env:path += ';C:\Qt\Tools\mingw530_32\bin'
+```
+
+Make does not like spaces in filenames.  Bonjour installs into C:\Program Files\... by default.  To fix this:
+
+```powershell
+# In cmd.exe (I don't know how to make symlinks in powershell)
+mklink /D C:\bonjour-sdk "C:\Program Files\Bonjour SDK"
+# back in powershell...
+$env:BONJOUR_SDK_HOME = 'C:\bonjour-sdk'
+```
+
+Run the build:
+
+```powershell
+.\hm.cmd conf -g7
+# TODO in src/gui/Makefile.Release, wrap all "$(BONJOUR_SDK_HOME)/" lines in double quotes because BONJOUR_SDK_HOME has a space in it.
+.\hm.cmd build
+.\hm.cmd package win
+```
+
+
+
+
+C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.10.25017\include\xkeycheck.h(260):
+fatal error C1189: #error:  The C++ Standard Library
+forbids macroizing keywords.
+Enable warning C4005 to find the forbidden macro.
+[C:\Users\abradley\OneDrive\dev\synergy\build\src\lib\arch\arch.vcxproj]
