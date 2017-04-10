@@ -76,7 +76,7 @@ const QString &AppConfig::screenName() const { return m_ScreenName; }
 
 int AppConfig::port() const { return m_Port; }
 
-const QString &AppConfig::interface() const { return m_Interface; }
+const QString &AppConfig::interface_() const { return m_Interface; }
 
 int AppConfig::logLevel() const { return m_LogLevel; }
 

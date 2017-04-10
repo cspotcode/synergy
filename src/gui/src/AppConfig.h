@@ -64,7 +64,7 @@ class AppConfig: public QObject
 	public:
 		const QString& screenName() const;
 		int port() const;
-		const QString& interface() const;
+		const QString& interface_() const;
 		int logLevel() const;
 		bool logToFile() const;
 		const QString& logFilename() const;
