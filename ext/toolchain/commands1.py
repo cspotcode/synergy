@@ -262,7 +262,8 @@ class InternalCommands:
 		3 : VisualStudioGenerator('9 2008'),
 		4 : VisualStudioGenerator('9 2008 Win64'),
 		5 : VisualStudioGenerator('8 2005'),
-		6 : VisualStudioGenerator('8 2005 Win64')
+		6 : VisualStudioGenerator('8 2005 Win64'),
+		7 : VisualStudioGenerator('15 2017')
 	}
 
 	unix_generators = {
@@ -1731,18 +1732,22 @@ class InternalCommands:
 		except:
 			raise Exception('Unable to open Visual Studio registry key. Application may not be installed.')
 		
+		extraPath = ''
 		if generator.startswith('Visual Studio 8'):
 			value,type = _winreg.QueryValueEx(key, '8.0')
 		elif generator.startswith('Visual Studio 9'):
 			value,type = _winreg.QueryValueEx(key, '9.0')
 		elif generator.startswith('Visual Studio 10'):
 			value,type = _winreg.QueryValueEx(key, '10.0')
+		elif generator.startswith('Visual Studio 15'):
+			value,type = _winreg.QueryValueEx(key, '15.0')
+			extraPath = r'\Auxiliary\Build'
 		else:
 			raise Exception('Cannot determine vcvarsall.bat location for: ' + generator)
 		
 		# not sure why, but the value on 64-bit differs slightly to the original
 		if os_bits == '64bit':
-			path = value + r'vc\vcvarsall.bat'
+			path = value + r'vc' + extraPath + r'\vcvarsall.bat'
 		else:
 			path = value + r'vcvarsall.bat' 
 		
@@ -1779,7 +1784,7 @@ class InternalCommands:
 		else:
 			config = 'Debug'
 				
-		if generator.startswith('Visual Studio 10'):
+		if generator.startswith('Visual Studio 10') or generator.startswith('Visual Studio 15'):
 			cmd = ('@echo off\n'
 				'call "%s" %s \n'
 				'cd "%s"\n'
