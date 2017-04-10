@@ -38,11 +38,21 @@ Run the build:
 .\hm.cmd package win
 ```
 
+Packaging on Windows was broken on my machine. (something to do with WiX?)  This script should do the job well enough as a replacement:
 
-
-
-C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.10.25017\include\xkeycheck.h(260):
-fatal error C1189: #error:  The C++ Standard Library
-forbids macroizing keywords.
-Enable warning C4005 to find the forbidden macro.
-[C:\Users\abradley\OneDrive\dev\synergy\build\src\lib\arch\arch.vcxproj]
+```powershell
+mkdir package
+cp bin/Release/* ./package
+@(
+    'libgcc_s_dw2-1.dll',
+    'libstdc++-6.dll',
+    'libwinpthread-1.dll',
+    'Qt5Core.dll',
+    'Qt5Gui.dll',
+    'Qt5Network.dll',
+    'Qt5Widgets.dll'
+) | % {
+    cp ('C:\Qt\5.8\mingw53_32\bin\' + $_) ('./package/' + $_)
+}
+```
+...then zip up the ./package directory.
