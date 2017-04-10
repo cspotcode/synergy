@@ -91,9 +91,6 @@
 
 // VC++ specific
 #if (_MSC_VER >= 1200)
-	// work around for statement scoping bug
-#	define for if (false) { } else for
-
 	// turn off bonehead warnings
 #	pragma warning(disable: 4786) // identifier truncated in debug info
 #	pragma warning(disable: 4514) // unreferenced inline function removed
@@ -135,11 +132,6 @@
 
 // define NULL
 #include <stddef.h>
-
-// if not c++0x, future proof code by allowing use of nullptr
-#ifndef nullptr
-#	define nullptr NULL
-#endif
 
 // make assert available since we use it a lot
 #include <assert.h>

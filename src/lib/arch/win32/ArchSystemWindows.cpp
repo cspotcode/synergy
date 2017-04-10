@@ -171,7 +171,7 @@ ArchSystemWindows::getLibsUsed(void) const
 
 	DWORD pid = GetCurrentProcessId();
 
-	std::string msg = "pid:" + std::to_string((_ULonglong)pid) + "\n";
+	std::string msg = "pid:" + std::to_string((ULONGLONG)pid) + "\n";
 
     hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, pid);
 
