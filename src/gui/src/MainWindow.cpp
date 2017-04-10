@@ -1235,8 +1235,8 @@ void MainWindow::downloadBonjour()
 void MainWindow::installBonjour()
 {
 #if defined(Q_OS_WIN)
-	QString tempLocation = QDesktopServices::storageLocation(
-								QDesktopServices::TempLocation);
+	QString tempLocation = QStandardPaths::writableLocation(
+								QStandardPaths::TempLocation);
 	QString filename = tempLocation;
 	filename.append("\\").append(bonjourTargetFilename);
 	QFile file(filename);
